@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Fredoka', 'Comic Sans MS', cursive;
+}
+
+/* Custom CSS Variables for Themes */
+:root {
+  /* Default / Meisie Theme (Pink/Purple) */
+  --bg-app: #fdf2f8; 
+  --bg-panel: #fff0f5; 
+  --bg-surface-2: #ffffff; 
+  --bg-dialog: #ffffff;
+  
+  --bg-panel-border: #f9a8d4; 
+  
+  --text-main: #4a044e; 
+  --text-muted: #86198f; 
+  --accent-primary: #d946ef; 
+  --accent-secondary: #a855f7; 
+  
+  --status-success: #4ade80; 
+  --status-success-bg: #dcfce7; 
+  --status-inactive-bg: #fae8ff; 
+  
+  /* Shadows */
+  --shadow-panel: 0 4px 6px -1px rgb(219 39 119 / 0.1), 0 2px 4px -2px rgb(219 39 119 / 0.1);
+}
+
+/* Seun Theme Override (Blue/Teal) */
+[data-theme='seun'] {
+  --bg-app: #ecfeff; 
+  --bg-panel: #f0f9ff; 
+  --bg-surface-2: #ffffff;
+  --bg-dialog: #ffffff;
+
+  --bg-panel-border: #7dd3fc; 
+  
+  --text-main: #0c4a6e; 
+  --text-muted: #0369a1; 
+  --accent-primary: #0ea5e9; 
+  --accent-secondary: #06b6d4; 
+  
+  --status-inactive-bg: #e0f2fe; 
+  
+  /* Shadows */
+  --shadow-panel: 0 4px 6px -1px rgb(14 165 233 / 0.1), 0 2px 4px -2px rgb(14 165 233 / 0.1);
+}
+
+/* Base Styles */
+@layer base {
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-family: var(--font-display), var(--font-sans);
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+}
+
+/* Utilities for semantic usage */
+@layer utilities {
+  .bg-panel {
+    background-color: var(--bg-panel);
+    border-color: var(--bg-panel-border);
+    box-shadow: var(--shadow-panel);
+  }
+  .bg-surface-2 {
+    background-color: var(--bg-surface-2);
+    border: 1px solid var(--bg-panel-border);
+  }
+  .text-main {
+    color: var(--text-main);
+  }
+  .text-muted {
+    color: var(--text-muted);
+  }
+}
