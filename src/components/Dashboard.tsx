@@ -1,28 +1,36 @@
+import { useState } from 'react';
 import { useApp } from '../hooks/use-app';
 import ArrivalPhase from '../phases/ArrivalPhase';
 import OrganizationPhase from '../phases/OrganizationPhase';
 import StudyPhase from '../phases/StudyPhase';
-import FunBoard from './FunBoard'; // Import FunBoard
+import FunBoard from './FunBoard'; 
+import AdminDashboard from './AdminDashboard';
 import { cn } from '../lib/utils';
-import { Lock } from 'lucide-react';
+import { Lock, Settings } from 'lucide-react';
 
 export default function Dashboard() {
-  const { user, t, completedTasks, resetProgress } = useApp();
+  const { user, t, completedTasks, resetProgress, activities } = useApp();
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  // Simple Logic to check phase completion
-  const arrivalTasks = ['unpack', 'clothes', 'lunch', 'rest', 'trash'];
-  const phase1Complete = arrivalTasks.every(id => completedTasks.includes(id));
-  
-  // Organization Phase tasks
-  const phase2Complete = phase1Complete && completedTasks.includes('homework_sorted');
+  // Dynamic Logic to check phase completion
+  const phase1Complete = activities.arrival.length > 0 && activities.arrival.every(task => completedTasks.includes(task.id));
+  const phase2Complete = phase1Complete && (activities.organization.length === 0 || activities.organization.every(task => completedTasks.includes(task.id)));
 
   return (
     <div className="w-full max-w-[1920px] mx-auto min-h-screen pb-20 p-4 lg:p-8 space-y-8 transition-colors duration-500">
        {/* Header */}
        <header className="flex justify-between items-center bg-panel sticky top-4 z-10 p-4 rounded-3xl border shadow-sm/50">
-          <div>
-            <h1 className="text-xl font-bold text-muted">{t('goodAfternoon')},</h1>
-            <p className="text-[var(--accent-primary)] font-black text-3xl tracking-tight">{user.name}</p>
+          <div className="flex items-center gap-4">
+            <button 
+                onClick={() => setIsAdminOpen(true)}
+                className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--accent-secondary)] hover:scale-110 active:scale-95 transition-all shadow-sm"
+            >
+                <Settings size={28} />
+            </button>
+            <div>
+              <h1 className="text-xl font-bold text-muted">{t('goodAfternoon')},</h1>
+              <p className="text-[var(--accent-primary)] font-black text-3xl tracking-tight leading-none">{user.name}</p>
+            </div>
           </div>
           <div className="text-5xl drop-shadow-sm filter">
             {user.theme === 'meisie' ? '🐼' : '🚀'}
@@ -36,6 +44,7 @@ export default function Dashboard() {
                 <section className="bg-panel rounded-[2rem] p-6 lg:p-8 shadow-sm border">
                     <ArrivalPhase />
                 </section>
+                {/* ... rest of the sections ... */}
 
                 {/* Phase 2: Organization */}
                 <section className={cn(
@@ -75,6 +84,8 @@ export default function Dashboard() {
                 <FunBoard />
            </div>
        </div>
+
+       {isAdminOpen && <AdminDashboard onClose={() => setIsAdminOpen(false)} />}
 
        {/* Debug / Reset */}
        <div className="text-center pt-8 opacity-50 hover:opacity-100 transition-opacity">

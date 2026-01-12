@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useApp } from '../hooks/use-app';
-import { CheckCircle2, Circle, Clock, Trash2, Utensils, Shirt, Backpack } from 'lucide-react';
+import { 
+  CheckCircle2, Circle, Clock, Trash2, Utensils, Shirt, Backpack, 
+  HelpCircle, Smile, Star, Rocket, Music, Layers, BookOpen, Map, Microscope, 
+  Gamepad2, Coffee, Moon,
+  type LucideIcon 
+} from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export default function ArrivalPhase() {
-  const { t, completedTasks, toggleTask } = useApp();
+const ICON_MAP: Record<string, LucideIcon> = {
+  Trash2, Utensils, Shirt, Backpack, Clock, Smile, Star, Rocket, Music,
+  Layers, BookOpen, Map, Microscope, Gamepad2, Coffee, Moon
+};
 
-  // Timer logic for Rest feature
+export default function ArrivalPhase() {
+  const { completedTasks, toggleTask, activities, phaseNames, language } = useApp();
+
+  // Timer logic - linked to the first task that HAS a timer
+  const timerTask = activities.arrival.find(a => a.hasTimer);
   const [timerActive, setTimerActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 mins in seconds
+  const [timeLeft, setTimeLeft] = useState((timerTask?.timerDuration || 30) * 60);
 
   useEffect(() => {
     let interval: number;
@@ -24,12 +35,19 @@ export default function ArrivalPhase() {
       }, 1000);
     }
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timerActive]);
+  }, [timerActive, timeLeft]);
+
+  // Update timeLeft if the timer duration changes in admin
+  useEffect(() => {
+    if (!timerActive) {
+      const newTime = (timerTask?.timerDuration || 30) * 60;
+      setTimeLeft(prev => prev !== newTime ? newTime : prev);
+    }
+  }, [timerTask?.timerDuration, timerActive]);
 
   const toggleTimer = () => {
     if (!timerActive && timeLeft === 0) {
-        setTimeLeft(30 * 60); // Reset if finished
+        setTimeLeft((timerTask?.timerDuration || 30) * 60);
     }
     setTimerActive(!timerActive);
   };
@@ -40,20 +58,14 @@ export default function ArrivalPhase() {
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  const tasks = [
-    { id: 'unpack', icon: Backpack, labelProp: 'unpack' },
-    { id: 'clothes', icon: Shirt, labelProp: 'clothes' },
-    { id: 'lunch', icon: Utensils, labelProp: 'lunch' },
-    { id: 'rest', icon: Clock, labelProp: 'rest', hasTimer: true },
-    { id: 'trash', icon: Trash2, labelProp: 'trash' },
-  ];
-
   return (
     <div>
-      <h2 className="text-2xl font-black mb-6 text-main tracking-tight">{t('phase1')}</h2>
+      <h2 className="text-2xl font-black mb-6 text-main tracking-tight">{phaseNames.arrival[language]}</h2>
       <div className="grid gap-4">
-        {tasks.map((task) => {
+        {activities.arrival.map((task) => {
           const isCompleted = completedTasks.includes(task.id);
+          const Icon = ICON_MAP[task.iconName as keyof typeof ICON_MAP] || HelpCircle;
+
           return (
             <div key={task.id} className="relative group">
               <button 
@@ -70,15 +82,15 @@ export default function ArrivalPhase() {
                     "p-3 rounded-full transition-colors border-2",
                     isCompleted ? "bg-[var(--status-success)] border-transparent text-white" : "bg-[var(--bg-panel)] border-[var(--bg-panel-border)] text-[var(--accent-secondary)]"
                 )}>
-                  <task.icon size={28} strokeWidth={2.5} />
+                  <Icon size={28} strokeWidth={2.5} />
                 </div>
 
                 <div className="flex-1 text-left">
                   <span className={cn(
-                      "text-lg font-bold block",
+                      "text-lg font-bold block leading-tight",
                       isCompleted ? "text-[var(--text-main)] line-through opacity-70" : "text-[var(--text-main)]"
                   )}>
-                    {t(task.labelProp)}
+                    {task.label[language]}
                   </span>
                 </div>
 
