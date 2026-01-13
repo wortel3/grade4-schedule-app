@@ -87,13 +87,27 @@ export default function Dashboard() {
 
        {isAdminOpen && <AdminDashboard onClose={() => setIsAdminOpen(false)} />}
 
-       {/* Debug / Reset */}
-       <div className="text-center pt-8 opacity-50 hover:opacity-100 transition-opacity">
-           <button onClick={resetProgress} className="text-xs font-bold text-red-400 hover:text-red-600 bg-red-50 px-4 py-2 rounded-full">
-               Reset Daily Progress (Debug)
-           </button>
-       </div>
+        {/* Day Complete / Next Day */}
+        {(phase1Complete && phase2Complete && activities.study.every(task => completedTasks.includes(task.id))) && (
+            <div className="bg-[var(--accent-primary)] p-8 rounded-[2.5rem] shadow-2xl text-white text-center space-y-6 animate-in zoom-in-95 duration-500">
+                <div className="text-6xl animate-bounce">🏆</div>
+                <h2 className="text-4xl font-black">{t('allDone')}</h2>
+                <p className="text-xl font-bold opacity-90">You worked so hard today! Time to rest and play.</p>
+                <button 
+                  onClick={resetProgress}
+                  className="w-full max-w-md mx-auto py-6 bg-white text-[var(--accent-primary)] rounded-[2rem] font-black text-2xl shadow-xl transition-all hover:scale-105 active:scale-95"
+                >
+                  ✨ {t('startNewDay')}
+                </button>
+            </div>
+        )}
+
+        {/* Debug / Reset */}
+        <div className="text-center pt-8 opacity-20 hover:opacity-100 transition-opacity">
+            <button onClick={resetProgress} className="text-[10px] uppercase tracking-widest font-black text-muted hover:text-red-500">
+                Resette Progress (Debug)
+            </button>
+        </div>
     </div>
   );
 }
-

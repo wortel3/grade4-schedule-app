@@ -94,9 +94,17 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
       <div className="bg-panel w-full max-w-4xl h-[90vh] overflow-hidden rounded-[2.5rem] shadow-2xl flex flex-col border border-white/20">
         {/* Header */}
         <div className="p-6 border-b flex justify-between items-center bg-[var(--bg-app)]">
-          <div>
-            <h1 className="text-3xl font-black text-main tracking-tight">Admin Dashboard</h1>
-            <p className="text-muted font-bold">Customize your kid's schedule</p>
+          <div className="flex items-center gap-6">
+            <div>
+              <h1 className="text-3xl font-black text-main tracking-tight">Admin Dashboard</h1>
+              <p className="text-muted font-bold">Customize your kid's schedule</p>
+            </div>
+            <button 
+                onClick={() => { if(confirm('Reset all progress for a new day?')) { useApp().resetProgress(); onClose(); } }}
+                className="px-6 py-3 bg-[var(--status-inactive-bg)] text-[var(--accent-secondary)] rounded-2xl font-black text-sm hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-200"
+            >
+                🔄 Reset for New Day
+            </button>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-full transition-colors text-muted">
             <X size={28} />

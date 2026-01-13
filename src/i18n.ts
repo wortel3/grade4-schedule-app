@@ -59,6 +59,10 @@ export const translations = {
     reward_study_title: "Brain Power!",
     reward_study_desc: "Your brain just got bigger!",
     reward_awesome_title: "Awesome!",
+    startNewDay: "Start a New Day",
+    allDone: "All Done for Today!",
+    yes: "Yes",
+    no: "No",
   },
   af: {
     // Onboarding
@@ -120,6 +124,10 @@ export const translations = {
     reward_study_title: "Breinkrag!",
     reward_study_desc: "Jou brein het sopas groter geword!",
     reward_awesome_title: "Ongelooflik!",
+    startNewDay: "Begin 'n Nuwe Dag",
+    allDone: "Klaar vir Vandag!",
+    yes: "Ja",
+    no: "Nee",
   }
 };
 

@@ -28,19 +28,28 @@ export default function StudyPhase() {
             const Icon = ICON_MAP[subject.iconName as keyof typeof ICON_MAP] || HelpCircle;
 
             return (
-              <button
-                key={subject.id}
-                onClick={() => setActiveSubject(isActive ? null : subject.id)}
-                className={cn(
-                  "p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all duration-300",
-                  isActive ? "bg-[var(--accent-primary)] text-white shadow-lg scale-105 border-transparent" : 
-                  isCompleted ? "bg-[var(--status-success-bg)] border-[var(--status-success)] text-[var(--status-success)]" :
-                  "bg-surface-2 border-[var(--bg-panel-border)] text-muted hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
-                )}
-              >
-                <Icon size={24} />
-                <span className="font-bold text-xs">{subject.label[language]}</span>
-              </button>
+                <div className="flex flex-col items-center gap-2">
+                    <button
+                        onClick={() => setActiveSubject(isActive ? null : subject.id)}
+                        className={cn(
+                        "p-4 rounded-2xl border flex flex-col items-center gap-2 transition-all duration-300 w-full",
+                        isActive ? "bg-[var(--accent-primary)] text-white shadow-lg scale-105 border-transparent" : 
+                        isCompleted ? "bg-[var(--status-success-bg)] border-[var(--status-success)] text-[var(--status-success)]" :
+                        "bg-surface-2 border-[var(--bg-panel-border)] text-muted hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]"
+                        )}
+                    >
+                        <Icon size={24} />
+                        <span className="font-bold text-xs">{subject.label[language]}</span>
+                    </button>
+                    {!isCompleted && isActive && (
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); toggleTask(subject.id); }}
+                            className="text-[10px] font-black uppercase text-[var(--accent-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                        >
+                            Mark Done
+                        </button>
+                    )}
+                </div>
             );
           })}
         </div>

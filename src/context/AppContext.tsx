@@ -86,7 +86,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetProgress = () => {
-    setState(prev => ({ ...prev, completedTasks: [], lastInteraction: null }));
+    setState(prev => ({ 
+      ...prev, 
+      completedTasks: [], 
+      lastInteraction: null,
+      lastCompletedDate: new Date().toISOString().split('T')[0] 
+    }));
   };
 
   const addActivity = (phase: ActivityPhase, activity: Omit<Activity, 'id'>) => {
