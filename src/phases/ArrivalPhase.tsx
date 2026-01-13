@@ -15,6 +15,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 function TaskTimer({ task }: { task: Activity }) {
+    const { t } = useApp();
     const [timerActive, setTimerActive] = useState(false);
     const [timeLeft, setTimeLeft] = useState((task.timerDuration || 30) * 60);
 
@@ -59,7 +60,7 @@ function TaskTimer({ task }: { task: Activity }) {
                 )}
             >
                 <Clock size={16} />
-                <span>{timerActive ? 'Pause' : 'Start Timer'} ({formatTime(timeLeft)})</span>
+                <span>{timerActive ? t('pause') : t('startTimer')} ({formatTime(timeLeft)})</span>
             </button>
         </div>
     );

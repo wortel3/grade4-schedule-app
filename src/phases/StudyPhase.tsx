@@ -46,7 +46,7 @@ export default function StudyPhase() {
                             onClick={(e) => { e.stopPropagation(); toggleTask(subject.id); }}
                             className="text-[10px] font-black uppercase text-[var(--accent-secondary)] hover:text-[var(--accent-primary)] transition-colors"
                         >
-                            Mark Done
+                            {t('markDone')}
                         </button>
                     )}
                 </div>

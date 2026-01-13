@@ -6,6 +6,52 @@
 }
 
 /* Custom CSS Variables for Themes */
+/* Print Styles - Optimized for A4 */
+@media print {
+  /* Hide everything by default */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Show only the print view */
+  .print-only,
+  .print-only * {
+    visibility: visible !important;
+    display: block !important;
+  }
+  
+  .print-only {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  
+  /* A4 page setup */
+  @page {
+    size: A4;
+    margin: 1.5cm 1.5cm 1.5cm 1.5cm;
+  }
+  
+  /* Prevent page breaks inside important elements */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  
+  /* Avoid breaking inside these elements */
+  section, div[style*="pageBreakInside"] {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  
+  /* Ensure proper orphans and widows */
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
 :root {
   /* Default / Meisie Theme (Pink/Purple) */
   --bg-app: #fdf2f8; 

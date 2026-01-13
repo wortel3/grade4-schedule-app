@@ -16,10 +16,15 @@ const ICON_OPTIONS: Record<string, LucideIcon> = {
 };
 
 export default function AdminDashboard({ onClose }: { onClose: () => void }) {
-  const { activities, addActivity, removeActivity, updateActivity, reorderActivities, phaseNames, updatePhaseName, language, resetProgress } = useApp();
+  const { 
+    activities, addActivity, removeActivity, updateActivity, reorderActivities, 
+    phaseNames, updatePhaseName, language, resetProgress, 
+    user, setLanguage, setTheme, updateUser 
+  } = useApp();
   const [editingActivity, setEditingActivity] = useState<{phase: ActivityPhase, activity: Activity} | null>(null);
   const [newActivityPhase, setNewActivityPhase] = useState<ActivityPhase | null>(null);
   const [editingPhaseName, setEditingPhaseName] = useState<ActivityPhase | null>(null);
+  const [nameInput, setNameInput] = useState(user.name);
   
   // Form State
   const [labelEn, setLabelEn] = useState('');
@@ -93,22 +98,100 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
       <div className="bg-panel w-full max-w-4xl h-[90vh] overflow-hidden rounded-[2.5rem] shadow-2xl flex flex-col border border-white/20">
         {/* Header */}
-        <div className="p-6 border-b flex justify-between items-center bg-[var(--bg-app)]">
-          <div className="flex items-center gap-6">
+        <div className="p-6 border-b bg-[var(--bg-app)]">          <div className="flex justify-between items-start mb-4">
             <div>
               <h1 className="text-3xl font-black text-main tracking-tight">Admin Dashboard</h1>
               <p className="text-muted font-bold">Customize your kid's schedule</p>
             </div>
-            <button 
-                onClick={() => { if(confirm('Reset all progress for a new day?')) { resetProgress(); onClose(); } }}
-                className="px-6 py-3 bg-[var(--status-inactive-bg)] text-[var(--accent-secondary)] rounded-2xl font-black text-sm hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-200"
-            >
-                🔄 Reset for New Day
+            <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-full transition-colors text-muted">
+              <X size={28} />
             </button>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/50 rounded-full transition-colors text-muted">
-            <X size={28} />
-          </button>
+          
+          {/* Settings Row */}
+          <div className="flex flex-wrap gap-3">
+            {/* Name Input */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-[var(--bg-panel-border)]">
+              <span className="text-xs font-black text-muted uppercase">Name:</span>
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                onBlur={() => {
+                  if (nameInput.trim()) {
+                    updateUser({ name: nameInput.trim() });
+                  } else {
+                    setNameInput(user.name);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.currentTarget.blur();
+                  }
+                }}
+                className="px-3 py-1 rounded-lg font-bold text-sm bg-slate-50 border border-slate-200 focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 outline-none min-w-[120px]"
+                placeholder="Child's name"
+              />
+            </div>
+
+            {/* Language Toggle */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-[var(--bg-panel-border)]">
+              <span className="text-xs font-black text-muted uppercase">Language:</span>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`px-3 py-1 rounded-lg font-bold text-sm transition-all ${
+                  language === 'en' 
+                    ? 'bg-[var(--accent-primary)] text-white' 
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
+                }`}
+              >
+                🇬🇧 EN
+              </button>
+              <button
+                onClick={() => setLanguage('af')}
+                className={`px-3 py-1 rounded-lg font-bold text-sm transition-all ${
+                  language === 'af' 
+                    ? 'bg-[var(--accent-primary)] text-white' 
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
+                }`}
+              >
+                🇿🇦 AF
+              </button>
+            </div>
+
+            {/* Theme/Gender Toggle */}
+            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-[var(--bg-panel-border)]">
+              <span className="text-xs font-black text-muted uppercase">Theme:</span>
+              <button
+                onClick={() => setTheme('meisie')}
+                className={`px-3 py-1 rounded-lg font-bold text-sm transition-all ${
+                  user.theme === 'meisie' 
+                    ? 'bg-pink-500 text-white' 
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
+                }`}
+              >
+                🐼 Girl
+              </button>
+              <button
+                onClick={() => setTheme('seun')}
+                className={`px-3 py-1 rounded-lg font-bold text-sm transition-all ${
+                  user.theme === 'seun' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-slate-100 text-muted hover:bg-slate-200'
+                }`}
+              >
+                🚀 Boy
+              </button>
+            </div>
+
+            {/* Reset Button */}
+            <button 
+              onClick={() => { if(confirm('Reset all progress for a new day?')) { resetProgress(); onClose(); } }}
+              className="px-6 py-2 bg-[var(--status-inactive-bg)] text-[var(--accent-secondary)] rounded-xl font-black text-sm hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-200"
+            >
+              🔄 Reset Day
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-12">

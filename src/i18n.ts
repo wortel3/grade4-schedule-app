@@ -63,6 +63,16 @@ export const translations = {
     allDone: "All Done for Today!",
     yes: "Yes",
     no: "No",
+    tasks: "Tasks",
+    notes: "Notes",
+    practice: "Practice",
+    markDone: "Mark Done",
+    startTimer: "Start Timer",
+    pause: "Pause",
+    dayCompleteMsg: "You worked so hard today! Time to rest and play.",
+    resetDebug: "Reset Progress (Debug)",
+    print: "Print",
+    printChecklist: "Print Checklist",
   },
   af: {
     // Onboarding
@@ -128,6 +138,16 @@ export const translations = {
     allDone: "Klaar vir Vandag!",
     yes: "Ja",
     no: "Nee",
+    tasks: "Take",
+    notes: "Notas",
+    practice: "Oefen",
+    markDone: "Klaar",
+    startTimer: "Begin Tydhouer",
+    pause: "Pouse",
+    dayCompleteMsg: "Jy het so hard gewerk vandag! Tyd om te rus en speel.",
+    resetDebug: "Herstel Vorderings (Debug)",
+    print: "Druk",
+    printChecklist: "Druk Lysie",
   }
 };
 

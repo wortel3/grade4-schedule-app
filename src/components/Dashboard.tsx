@@ -6,7 +6,9 @@ import StudyPhase from '../phases/StudyPhase';
 import FunBoard from './FunBoard'; 
 import AdminDashboard from './AdminDashboard';
 import { cn } from '../lib/utils';
-import { Lock, Settings } from 'lucide-react';
+import { Lock, Settings, Printer } from 'lucide-react';
+import Fireworks from './Fireworks';
+import PrintView from './PrintView';
 
 export default function Dashboard() {
   const { user, t, completedTasks, resetProgress, activities } = useApp();
@@ -15,6 +17,7 @@ export default function Dashboard() {
   // Dynamic Logic to check phase completion
   const phase1Complete = activities.arrival.length > 0 && activities.arrival.every(task => completedTasks.includes(task.id));
   const phase2Complete = phase1Complete && (activities.organization.length === 0 || activities.organization.every(task => completedTasks.includes(task.id)));
+  const allComplete = phase2Complete && activities.study.every(task => completedTasks.includes(task.id));
 
   return (
     <div className="w-full max-w-[1920px] mx-auto min-h-screen pb-20 p-4 lg:p-8 space-y-8 transition-colors duration-500">
@@ -23,9 +26,17 @@ export default function Dashboard() {
           <div className="flex items-center gap-4">
             <button 
                 onClick={() => setIsAdminOpen(true)}
-                className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--accent-secondary)] hover:scale-110 active:scale-95 transition-all shadow-sm"
+                className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--accent-secondary)] hover:scale-110 active:scale-95 transition-all shadow-sm print:hidden"
+                title={t('settings')}
             >
                 <Settings size={28} />
+            </button>
+            <button 
+                onClick={() => window.print()}
+                className="p-3 bg-[var(--bg-app)] rounded-2xl text-[var(--accent-primary)] hover:scale-110 active:scale-95 transition-all shadow-sm print:hidden"
+                title={t('print')}
+            >
+                <Printer size={28} />
             </button>
             <div>
               <h1 className="text-xl font-bold text-muted">{t('goodAfternoon')},</h1>
@@ -44,7 +55,6 @@ export default function Dashboard() {
                 <section className="bg-panel rounded-[2rem] p-6 lg:p-8 shadow-sm border">
                     <ArrivalPhase />
                 </section>
-                {/* ... rest of the sections ... */}
 
                 {/* Phase 2: Organization */}
                 <section className={cn(
@@ -88,26 +98,50 @@ export default function Dashboard() {
        {isAdminOpen && <AdminDashboard onClose={() => setIsAdminOpen(false)} />}
 
         {/* Day Complete / Next Day */}
-        {(phase1Complete && phase2Complete && activities.study.every(task => completedTasks.includes(task.id))) && (
-            <div className="bg-[var(--accent-primary)] p-8 rounded-[2.5rem] shadow-2xl text-white text-center space-y-6 animate-in zoom-in-95 duration-500">
-                <div className="text-6xl animate-bounce">🏆</div>
-                <h2 className="text-4xl font-black">{t('allDone')}</h2>
-                <p className="text-xl font-bold opacity-90">You worked so hard today! Time to rest and play.</p>
-                <button 
-                  onClick={resetProgress}
-                  className="w-full max-w-md mx-auto py-6 bg-white text-[var(--accent-primary)] rounded-[2rem] font-black text-2xl shadow-xl transition-all hover:scale-105 active:scale-95"
-                >
-                  ✨ {t('startNewDay')}
-                </button>
+        {allComplete && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-500">
+                <Fireworks />
+                <div className="bg-panel max-w-lg w-full p-10 rounded-[3rem] shadow-2xl text-center space-y-8 animate-in zoom-in-95 slide-in-from-bottom-10 duration-700 border-4 border-[var(--accent-primary)] relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-[var(--accent-primary)] to-transparent opacity-50" />
+                    
+                    <div className="relative">
+                        <div className="text-8xl animate-bounce mb-4">🏆</div>
+                        <div className="absolute -top-4 -right-4 bg-[var(--accent-secondary)] text-white w-12 h-12 rounded-full flex items-center justify-center font-black animate-pulse shadow-lg">
+                            ★
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <h2 className="text-5xl font-black bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] bg-clip-text text-transparent italic">
+                            {t('allDone')}
+                        </h2>
+                        <p className="text-2xl font-bold text-muted balance-text">
+                            {t('dayCompleteMsg')}
+                        </p>
+                    </div>
+
+                    <button 
+                        onClick={resetProgress}
+                        className="w-full py-6 bg-[var(--accent-primary)] text-white rounded-[2rem] font-black text-2xl shadow-[0_10px_0_rgb(0,0,0,0.1)] transition-all hover:translate-y-[-2px] hover:shadow-[0_12px_0_rgb(0,0,0,0.1)] active:translate-y-[4px] active:shadow-none bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)]"
+                    >
+                        ✨ {t('startNewDay')}
+                    </button>
+
+                    <p className="text-xs uppercase tracking-[0.2em] font-black text-muted/40">
+                        {new Date().toLocaleDateString(user.language === 'af' ? 'af-ZA' : 'en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })}
+                    </p>
+                </div>
             </div>
         )}
 
         {/* Debug / Reset */}
         <div className="text-center pt-8 opacity-20 hover:opacity-100 transition-opacity">
             <button onClick={resetProgress} className="text-[10px] uppercase tracking-widest font-black text-muted hover:text-red-500">
-                Resette Progress (Debug)
+                {t('resetDebug')}
             </button>
         </div>
+
+        <PrintView />
     </div>
   );
 }
