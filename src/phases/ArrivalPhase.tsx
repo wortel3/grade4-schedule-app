@@ -7,56 +7,66 @@ import {
   type LucideIcon 
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import type { Activity } from '../types';
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Trash2, Utensils, Shirt, Backpack, Clock, Smile, Star, Rocket, Music,
   Layers, BookOpen, Map, Microscope, Gamepad2, Coffee, Moon
 };
 
+function TaskTimer({ task }: { task: Activity }) {
+    const [timerActive, setTimerActive] = useState(false);
+    const [timeLeft, setTimeLeft] = useState((task.timerDuration || 30) * 60);
+
+    useEffect(() => {
+        let interval: ReturnType<typeof setInterval>;
+        if (timerActive && timeLeft > 0) {
+            interval = setInterval(() => {
+                setTimeLeft((prev) => {
+                    if (prev <= 1) {
+                        setTimerActive(false);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [timerActive, timeLeft]);
+
+    const toggleTimer = () => {
+        if (!timerActive && timeLeft === 0) {
+            setTimeLeft((task.timerDuration || 30) * 60);
+        }
+        setTimerActive(!timerActive);
+    };
+
+    const formatTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    };
+
+    return (
+        <div className="mt-3 ml-20">
+            <button 
+                onClick={(e) => { e.stopPropagation(); toggleTimer(); }} 
+                className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-colors",
+                    timerActive 
+                        ? "bg-red-100 text-red-600 animate-pulse" 
+                        : "bg-[var(--status-inactive-bg)] text-[var(--text-muted)] hover:bg-[var(--bg-panel-border)]"
+                )}
+            >
+                <Clock size={16} />
+                <span>{timerActive ? 'Pause' : 'Start Timer'} ({formatTime(timeLeft)})</span>
+            </button>
+        </div>
+    );
+}
+
 export default function ArrivalPhase() {
   const { completedTasks, toggleTask, activities, phaseNames, language } = useApp();
-
-  // Timer logic - linked to the first task that HAS a timer
-  const timerTask = activities.arrival.find(a => a.hasTimer);
-  const [timerActive, setTimerActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState((timerTask?.timerDuration || 30) * 60);
-
-  useEffect(() => {
-    let interval: number;
-    if (timerActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-            if (prev <= 1) {
-                setTimerActive(false);
-                return 0;
-            }
-            return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, timeLeft]);
-
-  // Update timeLeft if the timer duration changes in admin
-  useEffect(() => {
-    if (!timerActive) {
-      const newTime = (timerTask?.timerDuration || 30) * 60;
-      setTimeLeft(prev => prev !== newTime ? newTime : prev);
-    }
-  }, [timerTask?.timerDuration, timerActive]);
-
-  const toggleTimer = () => {
-    if (!timerActive && timeLeft === 0) {
-        setTimeLeft((timerTask?.timerDuration || 30) * 60);
-    }
-    setTimerActive(!timerActive);
-  };
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
 
   return (
     <div>
@@ -105,20 +115,7 @@ export default function ArrivalPhase() {
 
               {/* Timer UI if applicable */}
               {task.hasTimer && (
-                <div className="mt-3 ml-20">
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); toggleTimer(); }} 
-                    className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-colors",
-                        timerActive 
-                            ? "bg-red-100 text-red-600 animate-pulse" 
-                            : "bg-[var(--status-inactive-bg)] text-[var(--text-muted)] hover:bg-[var(--bg-panel-border)]"
-                    )}
-                  >
-                    <Clock size={16} />
-                    <span>{timerActive ? 'Pause' : 'Start Timer'} ({formatTime(timeLeft)})</span>
-                  </button>
-                </div>
+                <TaskTimer key={`${task.id}-${task.timerDuration}`} task={task} />
               )}
             </div>
           );

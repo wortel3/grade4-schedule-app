@@ -16,7 +16,7 @@ const ICON_OPTIONS: Record<string, LucideIcon> = {
 };
 
 export default function AdminDashboard({ onClose }: { onClose: () => void }) {
-  const { activities, addActivity, removeActivity, updateActivity, reorderActivities, phaseNames, updatePhaseName, language } = useApp();
+  const { activities, addActivity, removeActivity, updateActivity, reorderActivities, phaseNames, updatePhaseName, language, resetProgress } = useApp();
   const [editingActivity, setEditingActivity] = useState<{phase: ActivityPhase, activity: Activity} | null>(null);
   const [newActivityPhase, setNewActivityPhase] = useState<ActivityPhase | null>(null);
   const [editingPhaseName, setEditingPhaseName] = useState<ActivityPhase | null>(null);
@@ -100,7 +100,7 @@ export default function AdminDashboard({ onClose }: { onClose: () => void }) {
               <p className="text-muted font-bold">Customize your kid's schedule</p>
             </div>
             <button 
-                onClick={() => { if(confirm('Reset all progress for a new day?')) { useApp().resetProgress(); onClose(); } }}
+                onClick={() => { if(confirm('Reset all progress for a new day?')) { resetProgress(); onClose(); } }}
                 className="px-6 py-3 bg-[var(--status-inactive-bg)] text-[var(--accent-secondary)] rounded-2xl font-black text-sm hover:bg-red-50 hover:text-red-500 transition-all border border-transparent hover:border-red-200"
             >
                 🔄 Reset for New Day
