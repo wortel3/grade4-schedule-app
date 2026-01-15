@@ -106,9 +106,9 @@ export default function ArrivalPhase() {
                 </div>
 
                 {/* Completion checkmark */}
-                <div className="text-[var(--status-success)]">
-                  {isCompleted 
-                    ? <CheckCircle2 className="w-8 h-8 fill-current text-white" /> 
+                <div>
+                  {isCompleted
+                    ? <CheckCircle2 className="w-8 h-8 text-[var(--status-success)] fill-current" />
                     : <Circle className="w-8 h-8 text-[var(--bg-panel-border)]" />
                   }
                 </div>
