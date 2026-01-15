@@ -42,9 +42,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
           parsed.lastInteraction = null;
       }
 
-      return { ...initialState, ...parsed }; 
-    } catch (e) {
-      console.error("Failed to parse local storage", e);
+      return { ...initialState, ...parsed };
+    } catch {
       return initialState;
     }
   });

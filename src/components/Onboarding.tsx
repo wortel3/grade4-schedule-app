@@ -54,14 +54,14 @@ export default function Onboarding() {
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={() => handleLanguageSelect('af')}
-                className="flex flex-col items-center p-6 border-2 border-gray-100 dark:border-gray-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all font-bold text-xl"
+                className="flex flex-col items-center p-6 border-2 border-gray-100 dark:border-gray-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all font-bold text-xl text-gray-900 dark:text-white"
               >
                 <span className="text-4xl mb-2">🇿🇦</span>
                 Afrikaans
               </button>
               <button
                 onClick={() => handleLanguageSelect('en')}
-                className="flex flex-col items-center p-6 border-2 border-gray-100 dark:border-gray-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all font-bold text-xl"
+                className="flex flex-col items-center p-6 border-2 border-gray-100 dark:border-gray-700 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all font-bold text-xl text-gray-900 dark:text-white"
               >
                 <span className="text-4xl mb-2">🇬🇧</span>
                 English

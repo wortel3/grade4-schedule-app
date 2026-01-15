@@ -23,14 +23,14 @@ export default function Dashboard() {
   // Delay showing the completion modal to let fireworks play
   useEffect(() => {
     if (allComplete) {
-      setShowCompletionModal(false);
       const timer = setTimeout(() => {
         setShowCompletionModal(true);
       }, 7000); // 7 second delay to enjoy fireworks
       
-      return () => clearTimeout(timer);
-    } else {
-      setShowCompletionModal(false);
+      return () => {
+        clearTimeout(timer);
+        setShowCompletionModal(false);
+      };
     }
   }, [allComplete]);
 
@@ -157,13 +157,6 @@ export default function Dashboard() {
                 )}
             </>
         )}
-
-        {/* Debug / Reset */}
-        <div className="text-center pt-8 opacity-20 hover:opacity-100 transition-opacity">
-            <button onClick={resetProgress} className="text-[10px] uppercase tracking-widest font-black text-muted hover:text-red-500">
-                {t('resetDebug')}
-            </button>
-        </div>
 
         <PrintView />
     </div>
