@@ -18,7 +18,17 @@ export default function Dashboard() {
   // Dynamic Logic to check phase completion
   const phase1Complete = activities.arrival.length > 0 && activities.arrival.every(task => completedTasks.includes(task.id));
   const phase2Complete = phase1Complete && (activities.organization.length === 0 || activities.organization.every(task => completedTasks.includes(task.id)));
-  const allComplete = phase2Complete && activities.study.every(task => completedTasks.includes(task.id));
+
+  // Check if all study subjects are complete (including their subtasks)
+  const allStudyComplete = activities.study.every(subject => {
+    const subjectComplete = completedTasks.includes(subject.id);
+    const allSubtasksComplete = ['read', 'notes', 'practice'].every(
+      taskType => completedTasks.includes(`${subject.id}_${taskType}`)
+    );
+    return subjectComplete && allSubtasksComplete;
+  });
+
+  const allComplete = phase2Complete && allStudyComplete;
 
   // Delay showing the completion modal to let fireworks play
   useEffect(() => {
